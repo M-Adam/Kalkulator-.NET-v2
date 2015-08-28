@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,9 +21,209 @@ namespace Kalkulator.NET_v2
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static double[] _numbersForEquation = new double[2];
+        private static double? _memory = null;
+        private static EquationType _equationType = EquationType.NotChosen;
+        private static bool _isNextButtonErasingResultBox = false;
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void NumericButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+            if (!(sender is Button))
+            {
+                MessageBox.Show("Wrong function call");
+                return;
+            }
+
+            switch (((Button) sender).Name)
+            {
+                case "button_One":
+                case "button_Two":
+                case "button_Three":
+                case "button_Four":
+                case "button_Five":
+                case "button_Six":
+                case "button_Seven":
+                case "button_Eight":
+                case "button_Nine":
+                    if (resultBox.Text.Equals("0") || _isNextButtonErasingResultBox)
+                    {
+                        resultBox.Text = "";
+                    }
+                    resultBox.Text += ((Button) sender).Content.ToString();
+                    break;
+                case "button_Zero":
+                    if (resultBox.Text.Equals("0")) return;
+                    if (_isNextButtonErasingResultBox) resultBox.Text = "0";
+                    else 
+                        resultBox.Text += '0';
+                    break;
+            }
+            _isNextButtonErasingResultBox = false;
+        }
+
+        private void ComaButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (resultBox.Text.Contains(',')) return;
+
+            if (_isNextButtonErasingResultBox) resultBox.Text = "0,";
+
+            resultBox.Text += ',';
+        }
+
+        private void BackspaceButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(resultBox.Text.Equals("0")) return;
+
+            StringBuilder actualNumber = new StringBuilder(resultBox.Text);
+
+            sbyte digitsToDelete = 1;
+            if (actualNumber[actualNumber.Length - 2].ToString() == ",") digitsToDelete = 2;
+            string newNumber = actualNumber.Remove(actualNumber.Length - digitsToDelete, digitsToDelete).ToString();
+            resultBox.Text = newNumber;
+        }
+
+        private void CButton_Click(object sender, RoutedEventArgs e)
+        {
+            _isNextButtonErasingResultBox = false;
+            _memory = null;
+            resultBox.Text = "0";
+            _equationType = EquationType.NotChosen;
+        }
+
+        private void CEButton_Click(object sender, RoutedEventArgs e)
+        {
+            resultBox.Text = "0";
+        }
+
+        private void NegativeButton_Click(object sender, RoutedEventArgs e)
+        {
+            double result;
+            if (!(Double.TryParse(resultBox.Text, out result)))
+            {
+                MessageBox.Show("Parsing failed.");
+                return;
+            }
+            result *= -1;
+            resultBox.Text = result.ToString();
+        }
+
+        private void PercentButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_equationType != EquationType.Multiplication) return;
+
+            SaveNumberForEquation(1);
+
+            double result = (_numbersForEquation[0]/100)*_numbersForEquation[1];
+
+            resultBox.Text = result.ToString();
+        }
+           
+
+        private void OperationButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is Button))
+            {
+                MessageBox.Show("Wrong function call.");
+                return;
+            }
+
+            switch (((Button)sender).Name)
+            {
+                case "button_Addition":
+                    _equationType = EquationType.Addition;
+                    break;
+                case "button_Substraction":
+                    _equationType=EquationType.Substraction;
+                    break;
+                case "button_Multiplication":
+                    _equationType=EquationType.Multiplication;
+                    break;
+                case "button_Division":
+                    _equationType=EquationType.Division;
+                    break;
+            }
+
+            SaveNumberForEquation(0);
+
+            _isNextButtonErasingResultBox = true;
+        }
+
+        private void EquationButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveNumberForEquation(1);
+
+            double? result = CountResult();
+            if (result == null)
+            {
+                return;
+            }
+
+            resultBox.Text = result.ToString();
+
+            _isNextButtonErasingResultBox = true;
+        }
+
+        private void InvertionButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveNumberForEquation(0);
+            double result = Math.Pow(_numbersForEquation[0], -1);
+            resultBox.Text = result.ToString();
+        }
+
+        private void SqrtButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveNumberForEquation(0);
+            double result = Math.Sqrt(_numbersForEquation[0]);
+            resultBox.Text = result.ToString();
+        }
+
+        private void SaveNumberForEquation(int index)
+        {
+            if (!double.TryParse(resultBox.Text, out _numbersForEquation[index]))
+            {
+                MessageBox.Show("Parsing failed.");
+                return;
+            }
+        }
+
+        private double? CountResult()
+        {
+            double result;
+            switch (_equationType)
+            {
+                case EquationType.Addition:
+                    result = _numbersForEquation[0] + _numbersForEquation[1];
+                    break;
+                case EquationType.Substraction:
+                    result = _numbersForEquation[0] - _numbersForEquation[1];
+                    break;
+                case EquationType.Multiplication:
+                    result = _numbersForEquation[0] * _numbersForEquation[1];
+                    break;
+                case EquationType.Division:
+                    result = _numbersForEquation[0] / _numbersForEquation[1];
+                    break;
+                default:
+                    return null;
+            }
+
+            return result;
+        }
+
+        private enum EquationType
+        {
+            Addition, Substraction, Multiplication, Division, NotChosen
+        }
+
+        private void resultBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //TODO
         }
     }
 }
