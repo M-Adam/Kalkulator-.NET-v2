@@ -21,10 +21,14 @@ namespace Kalkulator.NET_v2
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Fields
+
         private static double[] _numbersForEquation = new double[2];
         private static double? _memory = null;
         private static EquationType _equationType = EquationType.NotChosen;
         private static bool _isNextButtonErasingResultBox = false;
+
+        #endregion
 
         public MainWindow()
         {
@@ -33,12 +37,9 @@ namespace Kalkulator.NET_v2
 
         private void NumericButton_Click(object sender, RoutedEventArgs e)
         {
-            
-            if (!(sender is Button))
-            {
-                MessageBox.Show("Wrong function call");
+            if (!(sender is Button) || resultBox.Text.Length == resultBox.MaxLength)
                 return;
-            }
+
 
             switch (((Button) sender).Name)
             {
@@ -60,7 +61,7 @@ namespace Kalkulator.NET_v2
                 case "button_Zero":
                     if (resultBox.Text.Equals("0")) return;
                     if (_isNextButtonErasingResultBox) resultBox.Text = "0";
-                    else 
+                    else
                         resultBox.Text += '0';
                     break;
             }
@@ -69,7 +70,7 @@ namespace Kalkulator.NET_v2
 
         private void ComaButton_Click(object sender, RoutedEventArgs e)
         {
-            if (resultBox.Text.Contains(',')) return;
+            if (resultBox.Text.Contains(',') || resultBox.Text.Length == resultBox.MaxLength) return;
 
             if (_isNextButtonErasingResultBox) resultBox.Text = "0,";
 
@@ -78,7 +79,7 @@ namespace Kalkulator.NET_v2
 
         private void BackspaceButton_Click(object sender, RoutedEventArgs e)
         {
-            if(resultBox.Text.Equals("0")) return;
+            if (resultBox.Text.Equals("0")) return;
 
             StringBuilder actualNumber = new StringBuilder(resultBox.Text);
 
@@ -92,6 +93,7 @@ namespace Kalkulator.NET_v2
         {
             _isNextButtonErasingResultBox = false;
             _memory = null;
+            memoryLabel.Content = "";
             resultBox.Text = "0";
             _equationType = EquationType.NotChosen;
         }
@@ -101,17 +103,6 @@ namespace Kalkulator.NET_v2
             resultBox.Text = "0";
         }
 
-        private void NegativeButton_Click(object sender, RoutedEventArgs e)
-        {
-            double result;
-            if (!(Double.TryParse(resultBox.Text, out result)))
-            {
-                MessageBox.Show("Parsing failed.");
-                return;
-            }
-            result *= -1;
-            resultBox.Text = result.ToString();
-        }
 
         private void PercentButton_Click(object sender, RoutedEventArgs e)
         {
@@ -123,7 +114,7 @@ namespace Kalkulator.NET_v2
 
             resultBox.Text = result.ToString();
         }
-           
+
 
         private void OperationButton_Click(object sender, RoutedEventArgs e)
         {
@@ -133,19 +124,19 @@ namespace Kalkulator.NET_v2
                 return;
             }
 
-            switch (((Button)sender).Name)
+            switch (((Button) sender).Name)
             {
                 case "button_Addition":
                     _equationType = EquationType.Addition;
                     break;
                 case "button_Substraction":
-                    _equationType=EquationType.Substraction;
+                    _equationType = EquationType.Substraction;
                     break;
                 case "button_Multiplication":
-                    _equationType=EquationType.Multiplication;
+                    _equationType = EquationType.Multiplication;
                     break;
                 case "button_Division":
-                    _equationType=EquationType.Division;
+                    _equationType = EquationType.Division;
                     break;
             }
 
@@ -169,6 +160,19 @@ namespace Kalkulator.NET_v2
             _isNextButtonErasingResultBox = true;
         }
 
+
+        private void NegativeButton_Click(object sender, RoutedEventArgs e)
+        {
+            double result;
+            if (!(Double.TryParse(resultBox.Text, out result)))
+            {
+                MessageBox.Show("Parsing failed.");
+                return;
+            }
+            result *= -1;
+            resultBox.Text = result.ToString();
+        }
+
         private void InvertionButton_Click(object sender, RoutedEventArgs e)
         {
             SaveNumberForEquation(0);
@@ -182,6 +186,63 @@ namespace Kalkulator.NET_v2
             double result = Math.Sqrt(_numbersForEquation[0]);
             resultBox.Text = result.ToString();
         }
+
+        #region Memory
+
+        private void MCButton_Click(object sender, RoutedEventArgs e)
+        {
+            _memory = null;
+            memoryLabel.Content = "";
+        }
+
+        private void MRButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_memory != null)
+                resultBox.Text = _memory.ToString();
+            _isNextButtonErasingResultBox = true;
+        }
+
+        private void MSButton_Click(object sender, RoutedEventArgs e)
+        {
+            double newMemory;
+            if (!Double.TryParse(resultBox.Text, out newMemory))
+            {
+                MessageBox.Show("Parsing failed.");
+                return;
+            }
+            _memory = newMemory;
+            memoryLabel.Content = "M";
+        }
+
+        private void MMinusButton_Click(object sender, RoutedEventArgs e)
+        {
+            double memoryChange;
+            if (Double.TryParse(resultBox.Text, out memoryChange))
+            {
+                MessageBox.Show("Parsing failed.");
+                return;
+            }
+
+            _memory = (_memory == null) ? (0 - memoryChange) : (_memory - memoryChange);
+            memoryLabel.Content = "m";
+        }
+
+        private void MPlusButton_Click(object sender, RoutedEventArgs e)
+        {
+            double memoryChange;
+            if (Double.TryParse(resultBox.Text, out memoryChange))
+            {
+                MessageBox.Show("Parsing failed.");
+                return;
+            }
+
+            _memory = (_memory == null) ? (0 + memoryChange) : (_memory + memoryChange);
+            memoryLabel.Content = "m";
+        }
+
+        #endregion
+
+        #region HelpMethods
 
         private void SaveNumberForEquation(int index)
         {
@@ -204,10 +265,10 @@ namespace Kalkulator.NET_v2
                     result = _numbersForEquation[0] - _numbersForEquation[1];
                     break;
                 case EquationType.Multiplication:
-                    result = _numbersForEquation[0] * _numbersForEquation[1];
+                    result = _numbersForEquation[0]*_numbersForEquation[1];
                     break;
                 case EquationType.Division:
-                    result = _numbersForEquation[0] / _numbersForEquation[1];
+                    result = _numbersForEquation[0]/_numbersForEquation[1];
                     break;
                 default:
                     return null;
@@ -216,14 +277,15 @@ namespace Kalkulator.NET_v2
             return result;
         }
 
+        #endregion
+
         private enum EquationType
         {
-            Addition, Substraction, Multiplication, Division, NotChosen
-        }
-
-        private void resultBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            //TODO
+            Addition,
+            Substraction,
+            Multiplication,
+            Division,
+            NotChosen
         }
     }
 }

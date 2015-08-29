@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Kalkulator .NET v2" Height="344.003" Width="236.775" Background="White" WindowStyle="ToolWindow" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Cursor="Arrow" >
     <Grid Margin="0,0,-8,0">
-        <TextBox x:Name="resultBox" FontSize="20" TextAlignment="Right" HorizontalAlignment="Left" Height="46" Margin="10,10,0,0" TextWrapping="NoWrap" Text="0" VerticalAlignment="Top" Width="202" IsReadOnly="True" Cursor="Arrow" MaxLength="16" MaxLines="1" TextChanged="resultBox_TextChanged"/>
+        <TextBox x:Name="resultBox" FontSize="24" TextAlignment="Right" HorizontalAlignment="Left" Height="46" Margin="10,10,0,0" TextWrapping="NoWrap" Text="0" VerticalAlignment="Top" Width="202" IsReadOnly="True" Cursor="Arrow" MaxLength="14" MaxLines="1"/>
         <Button x:Name="button_Equals" Content="=" HorizontalAlignment="Left" Margin="177,226,0,0" VerticalAlignment="Top" Width="35" Height="73" Click="EquationButton_Click"/>
         <Button x:Name="button_Addition" Content="+" HorizontalAlignment="Left" Margin="135,265,0,0" VerticalAlignment="Top" Width="35" Height="34" Click="OperationButton_Click"/>
         <Button x:Name="button_Coma" Content="," HorizontalAlignment="Left" Margin="94,265,0,0" VerticalAlignment="Top" Width="35" Height="34" Click="ComaButton_Click"/>
@@ -31,11 +31,12 @@
         <Button x:Name="button_Invert" Content="1/x" HorizontalAlignment="Left" Margin="177,186,0,0" VerticalAlignment="Top" Width="35" Height="34" Click="InvertionButton_Click"/>
         <Button x:Name="button_Percent" Content="%" HorizontalAlignment="Left" Margin="177,147,0,0" VerticalAlignment="Top" Width="35" Height="34" Click ="PercentButton_Click"/>
         <Button x:Name="button_Sqrt" Content="√" HorizontalAlignment="Left" Margin="177,108,0,0" VerticalAlignment="Top" Width="35" Height="34" Click="SqrtButton_Click"/>
-        <Button x:Name="button_MC" Content="MC" HorizontalAlignment="Left" Margin="11,69,0,0" VerticalAlignment="Top" Width="35" Height="34"/>
-        <Button x:Name="button_MR" Content="MR" HorizontalAlignment="Left" Margin="52,69,0,0" VerticalAlignment="Top" Width="36" Height="34"/>
-        <Button x:Name="button_MS" Content="MS" HorizontalAlignment="Left" Margin="94,69,0,0" VerticalAlignment="Top" Width="35" Height="34"/>
-        <Button x:Name="button_MPlus" Content="M-" HorizontalAlignment="Left" Margin="135,69,0,0" VerticalAlignment="Top" Width="35" Height="34"/>
-        <Button x:Name="button_MMinus" Content="M+" HorizontalAlignment="Left" Margin="177,69,0,0" VerticalAlignment="Top" Width="35" Height="34"/>
+        <Button x:Name="button_MC" Content="MC" HorizontalAlignment="Left" Margin="11,69,0,0" VerticalAlignment="Top" Width="35" Height="34" Click="MCButton_Click"/>
+        <Button x:Name="button_MR" Content="MR" HorizontalAlignment="Left" Margin="52,69,0,0" VerticalAlignment="Top" Width="36" Height="34" Click="MRButton_Click"/>
+        <Button x:Name="button_MS" Content="MS" HorizontalAlignment="Left" Margin="94,69,0,0" VerticalAlignment="Top" Width="35" Height="34" Click="MSButton_Click"/>
+        <Button x:Name="button_MPlus" Content="M-" HorizontalAlignment="Left" Margin="135,69,0,0" VerticalAlignment="Top" Width="35" Height="34" Click="MMinusButton_Click"/>
+        <Button x:Name="button_MMinus" Content="M+" HorizontalAlignment="Left" Margin="177,69,0,0" VerticalAlignment="Top" Width="35" Height="34" Click="MPlusButton_Click"/>
+        <Label x:Name="memoryLabel" Content="" HorizontalAlignment="Left" Margin="6,35,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
 
     </Grid>
 </Window>
