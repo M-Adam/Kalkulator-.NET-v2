@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -27,22 +28,12 @@ namespace Kalkulator.NET_v2
         private static double? _memory = null;
         private static EquationType _equationType = EquationType.NotChosen;
         private static bool _isNextButtonErasingResultBox = false;
-        
+
         #endregion
 
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            AddGestures();
-        }
-
-        private void AddGestures()
-        {
-            _myCommand.InputGestures.Add(new KeyGesture(Key.D5));
         }
 
         private void NumericButton_Click(object sender, RoutedEventArgs e)
@@ -80,21 +71,25 @@ namespace Kalkulator.NET_v2
 
         private void CommaButton_Click(object sender, RoutedEventArgs e)
         {
-            if (resultBox.Text.Contains(',') || resultBox.Text.Length == resultBox.MaxLength) return;
+            if (resultBox.Text.Contains(',') || resultBox.Text.Length == resultBox.MaxLength)
+                return;
 
-            if (_isNextButtonErasingResultBox) resultBox.Text = "0,";
+            if (_isNextButtonErasingResultBox)
+                resultBox.Text = "0,";
 
             resultBox.Text += ',';
         }
 
         private void BackspaceButton_Click(object sender, RoutedEventArgs e)
         {
-            if (resultBox.Text.Equals("0")) return;
+            if (resultBox.Text.Equals("0"))
+                return;
 
             StringBuilder actualNumber = new StringBuilder(resultBox.Text);
 
             sbyte digitsToDelete = 1;
-            if (actualNumber[actualNumber.Length - 2].ToString() == ",") digitsToDelete = 2;
+            if (actualNumber[actualNumber.Length - 2].ToString() == ",")
+                digitsToDelete = 2;
             string newNumber = actualNumber.Remove(actualNumber.Length - digitsToDelete, digitsToDelete).ToString();
             resultBox.Text = newNumber;
         }
@@ -116,7 +111,8 @@ namespace Kalkulator.NET_v2
 
         private void PercentButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_equationType != EquationType.Multiplication) return;
+            if (_equationType != EquationType.Multiplication)
+                return;
 
             SaveNumberForEquation(1);
 
@@ -134,18 +130,18 @@ namespace Kalkulator.NET_v2
                 return;
             }
 
-            switch (((Button) sender).Name)
+            switch (((Button) sender).Content.ToString())
             {
-                case "button_Addition":
+                case "+":
                     _equationType = EquationType.Addition;
                     break;
-                case "button_Substraction":
+                case "-":
                     _equationType = EquationType.Substraction;
                     break;
-                case "button_Multiplication":
+                case "*":
                     _equationType = EquationType.Multiplication;
                     break;
-                case "button_Division":
+                case "/":
                     _equationType = EquationType.Division;
                     break;
             }
@@ -161,9 +157,7 @@ namespace Kalkulator.NET_v2
 
             double? result = CountResult();
             if (result == null)
-            {
                 return;
-            }
 
             resultBox.Text = result.ToString();
 
@@ -289,6 +283,74 @@ namespace Kalkulator.NET_v2
 
         #endregion
 
+        #region KeyBinding
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            int keyCode = KeyInterop.VirtualKeyFromKey(e.Key);
+
+            switch (keyCode)
+            {
+                case 8:
+                    BackspaceButton_Click(null, null);
+                    break;
+                case 13:
+                    EquationButton_Click(null, null);
+                    break;
+                case 27:
+                    Application.Current.Shutdown();
+                    break;
+                case 46:
+                    CButton_Click(null, null);
+                    break;
+                default:
+                    return;
+            }
+        }
+
+        private void Window_TextInput(object sender, TextCompositionEventArgs e)
+        {
+            Button button = new Button();
+
+            switch (e.Text)
+            {
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                case "5":
+                case "6":
+                case "7":
+                case "8":
+                case "9":
+                case "0":
+                    button.Content = e.Text;
+                    NumericButton_Click(button, null);
+                    break;
+                case "%":
+                    PercentButton_Click(null, null);
+                    break;
+                case ",":
+                case ".":
+                    CommaButton_Click(null, null);
+                    break;
+                case "+":
+                case "-":
+                case "*":
+                case "/":
+                    button.Content = e.Text;
+                    OperationButton_Click(button, null);
+                    break;
+                case "=":
+                    EquationButton_Click(null, null);
+                    break;
+                default:
+                    return;
+            }
+        }
+
+        #endregion
+
         private enum EquationType
         {
             Addition,
@@ -297,72 +359,5 @@ namespace Kalkulator.NET_v2
             Division,
             NotChosen
         }
-
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            //if (e.Key == Key.LeftShift) return;
-            int keyCode = KeyInterop.VirtualKeyFromKey(e.Key);
-            MessageBox.Show(keyCode.ToString());
-            
-            Button button = new Button();
-            
-
-            switch (e.Key)
-            {
-                case Key.D0:
-                    button.Content = "0";
-                    break;
-                case Key.D1:
-                    button.Content = "1";
-                    break;
-                case Key.D2:
-                    button.Content = "2";
-                    break;
-                case Key.D3:
-                    button.Content = "3";
-                    break;
-                case Key.D4:
-                    button.Content = "4";
-                    break;
-                case Key.D5:
-                    button.Content = "5";
-                    break;
-                case Key.D6:
-                    button.Content = "6";
-                    break;
-                case Key.D7:
-                    button.Content = "7";
-                    break;
-                case Key.D8:
-                    button.Content = "8";
-                    break;
-                case Key.D9:
-                    button.Content = "9";
-                    break;
-                case Key.OemComma:
-                case Key.OemPeriod:
-                    button.Content = ",";
-                    break;
-                case Key.OemPlus:
-                    button.Content = "+";
-                    break;
-                case Key.OemMinus:
-                    button.Content = "-";
-                    break;
-                case Key.Divide:
-                    button.Content = "/";
-                    break;
-                case Key.Multiply:
-                    button.Content = "*";
-                    break;
-                    //case Key.P
-
-            }
-
-            //NumericButton_Click(button,null);
-        }
-
-        private void Window_KeyUp(object sender, KeyEventArgs e)
-      
     }
 }

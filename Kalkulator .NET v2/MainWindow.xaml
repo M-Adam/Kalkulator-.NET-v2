@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kalkulator.NET_v2"
         mc:Ignorable="d"
-        Title="Kalkulator .NET v2" Height="344.003" Width="236.775" Background="White" WindowStyle="ToolWindow" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Cursor="Arrow" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" Loaded="Window_Loaded" >
+        Title="Kalkulator .NET v2" Height="344.003" Width="236.775" Background="White" WindowStyle="ToolWindow" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Cursor="Arrow" KeyDown="Window_KeyDown" TextInput="Window_TextInput" >
     
     <Grid Margin="0,0,-8,0">
         <TextBox x:Name="resultBox" FontSize="24" TextAlignment="Right" HorizontalAlignment="Left" Height="46" Margin="10,10,0,0" TextWrapping="NoWrap" Text="0" VerticalAlignment="Top" Width="202" IsReadOnly="True" Cursor="Arrow" MaxLength="14" MaxLines="1"/>
