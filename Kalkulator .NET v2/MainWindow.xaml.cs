@@ -35,7 +35,7 @@ namespace Kalkulator.NET_v2
         {
             InitializeComponent();
         }
-
+        #region Buttons
         private void NumericButton_Click(object sender, RoutedEventArgs e)
         {
             if (!(sender is Button) || resultBox.Text.Length == resultBox.MaxLength)
@@ -187,9 +187,11 @@ namespace Kalkulator.NET_v2
         private void SqrtButton_Click(object sender, RoutedEventArgs e)
         {
             SaveNumberForEquation(0);
+            if (_numbersForEquation[0] < 0) return;
             double result = Math.Sqrt(_numbersForEquation[0]);
             resultBox.Text = result.ToString();
         }
+        #endregion
 
         #region Memory
 
@@ -288,6 +290,8 @@ namespace Kalkulator.NET_v2
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             int keyCode = KeyInterop.VirtualKeyFromKey(e.Key);
+
+            MessageBox.Show(Key.Back.GetTypeCode().ToString());
 
             switch (keyCode)
             {
