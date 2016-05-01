@@ -32,7 +32,8 @@ namespace Kalkulator.NET_v2
                     resultBox.Text += ((Button)sender).Content.ToString();
                     break;
                 case "0":
-                    if (resultBox.Text.Equals("0")) return;
+                    if (resultBox.Text.Equals("0"))
+                        return;
                     if (isNextButtonErasingResultBox) resultBox.Text = "0";
                     else
                         resultBox.Text += '0';

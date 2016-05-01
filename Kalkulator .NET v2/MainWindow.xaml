@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kalkulator.NET_v2"
         mc:Ignorable="d"
-        Title="Kalkulator .NET v2" Height="344.003" Width="236.775" Background="White" WindowStyle="ToolWindow" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Cursor="Arrow" KeyDown="Window_KeyDown" TextInput="Window_TextInput" >
-    
-    <Grid Margin="0,0,-8,0">
+        Title="Kalkulator .NET v2" Height="347.647" Width="245.521" Background="White" WindowStyle="ToolWindow" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Cursor="Arrow" KeyDown="Window_KeyDown" TextInput="Window_TextInput" >
+
+    <Grid Margin="0,0,-16,-7">
         <TextBox x:Name="resultBox" FontSize="24" TextAlignment="Right" HorizontalAlignment="Left" Height="46" Margin="10,10,0,0" TextWrapping="NoWrap" Text="0" VerticalAlignment="Top" Width="202" IsReadOnly="True" Cursor="Arrow" MaxLength="14" MaxLines="1"/>
         <Button x:Name="button_Equals" Content="=" HorizontalAlignment="Left" Margin="177,226,0,0" VerticalAlignment="Top" Width="35" Height="73" Click="EquationButton_Click"/>
         <Button x:Name="button_Addition" Content="+" HorizontalAlignment="Left" Margin="135,265,0,0" VerticalAlignment="Top" Width="35" Height="34" Click="OperationButton_Click"/>
